@@ -1,3 +1,38 @@
 Pooling haritalama işleminden sonra çıktının boyutunu küçültür
 
 daraltır temizler ve net bir hale getirir
+
+(max pooling) vurgulanan yani büyük pixel değerlerini bulur
+
+örnek:
+
+f = [[1,5,
+3,11],
+
+[10,6,
+9,6]
+
+              ==     [[11,10],
+                       16,2]]
+[4,3,
+16,9]
+
+[1,1,
+2,2]]
+
+
+f'nin 0. indexindeki matrixin içinde en büyük 11 
+f'nin 1. indexindeki matrixin içinde en büyük 10
+f'nin 2. indexindeki matrixin içinde en büyük 16
+f'nin 3. indexindeki matrixin içinde en büyük 2
+
+sonuç(output)
+
+k = [11,10,
+     16,2]
+
+k kısmında gösterildiği gibi max pooling bu şekilde çalışır kısaca şöyledir;
+
+bir matrixin içindeki vektörleri tek tek inceler ve vektördeki en büyük sayıları bulup onları kendine alır,depolar.
+daha sonrasında kullanabilmemeiz için bu verileri matrix,vektör halinde istediğimiz formatta saklayabilir
+
