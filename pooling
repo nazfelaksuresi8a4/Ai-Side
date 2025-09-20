@@ -36,3 +36,25 @@ k kısmında gösterildiği gibi max pooling bu şekilde çalışır kısaca ş�
 bir matrixin içindeki vektörleri tek tek inceler ve vektördeki en büyük sayıları bulup onları kendine alır,depolar.
 daha sonrasında kullanabilmemeiz için bu verileri matrix,vektör halinde istediğimiz formatta saklayabilir
 
+Unpooling işlemi ise bu işlemin küçültmeli versiyonunun aynısının bir değişidir 
+
+sonuç aynı olur ancak 2x2 matrix yerine sonucun shape(boyut)'i değişmez yerine istenen(genelde 0) değerler konur 
+ve matrix döner 
+
+örnek:
+
+f = [
+
+[0,0,
+0,11],
+
+[10,0,
+0,0]
+
+[0,0,
+16,0]
+
+[0,0,
+2,2]]
+
+şeklinde olur
