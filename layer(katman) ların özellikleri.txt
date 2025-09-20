@@ -1,0 +1,20 @@
+Yapay zeka modellerinde layer terimi bir sinir ağının katmanlarını temsil eder bu katmanlar düğümlerden yani diğer bir çağrışımı ile nöronlardan oluşur 
+her bir nöron içinde bir veri tutabilir örneğin matrix,vektör,küme ayrıca layerlar sinir ağındaki düğümlerin kaç boyutlu olacağını belirler
+
+katmanın/(layer) tanımı:
+
+Yapay zeka modellerindeki katmanlar (layers), sinir ağının işleyişindeki temel yapısal birimlerdir. Katmanlar, veri akışını işler ve her bir katman, bir önceki katmanın çıktısını alıp yeni bir çıktı üretir. Katmanlar, bir ağırlıklı bağlantılar (weights) ve aktivasyon fonksiyonları aracılığıyla veriyi işler.
+
+Nöronun(neuron) tanımı:
+
+Nöronlar ya da düğümler (neural nodes), her bir katman içinde bulunan işleme birimleridir. Bu nöronlar, belirli bir girdi verisini alır, üzerinde işlem yapar ve çıktıyı bir sonraki katmana iletir.
+Nöronlar, genellikle bir girdi, ağırlık (weight), bias (önyargı) ve bir aktivasyon fonksiyonu içerir.
+Her nöron, bir matematiksel işlem uygular (örneğin, ağırlıklarla çarpma, bias ekleme ve aktivasyon fonksiyonu uygulama).
+
+Layer ve Nöron İlişkisi
+
+Bir katman, içindeki nöronlardan (veya düğümlerden) oluşur. Katman, girdi verisini işlerken, her nöron belirli bir işlemi yapar ve çıktıyı bir sonraki katmana iletir.
+Gizli katmanlar (hidden layers): Bu katmanlar, modelin öğrenmesi gereken özellikleri öğrenir. Çoğunlukla, bu katmanlardaki her nöron, belirli bir verinin özelliğini çıkarır.
+Örneğin, bir görüntü sınıflandırma görevinde, ilk katman kenarları ve temel desenleri öğrenebilir, sonraki katmanlar ise daha karmaşık özellikleri (örneğin, yüzler veya nesneler) öğrenebilir.
+Çıkış katmanı (output layer): Bu katman, modelin son sonucunu üretir. Sınıflandırma problemlerinde, her çıkış nöronu belirli bir sınıfı temsil eder.
+
