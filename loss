@@ -1,1 +1,3 @@
-Öğrernme yanlış olunca yapılan öğrenme hesabı
+Model outputu yanlış verince doğru output ve modelin 
+outputu arasındaki yanlış değerini hesaplayan 
+bir formüle loss denir
