@@ -1,0 +1,19 @@
+“Train” dediğimiz olay, yapay zekada bir modeli öğretme işi. Hani sen bir çocuğa matematik öğretiyorsun ya, soru çözdürüyorsun, yanlış yaptığında düzeltiyorsun… işte modelle aynı muhabbet.
+
+📌 Daha net anlatayım:
+
+Veri seti topluyorsun (mesela kedi–köpek fotoğrafları).
+
+Modelin içindeki parametreler (ağırlıklar, bias falan) rastgele başlıyor.
+
+Sen bu fotoları tek tek veriyorsun, model “bu kedi mi köpek mi?” diye tahmin yapıyor.
+
+Doğruysa helal, yanlışsa hata hesabı yapılıyor (loss).
+
+Bu hataya göre modelin parametreleri güncelleniyor (gradient descent vs.).
+
+Bu döngü defalarca dönüyor → model yavaş yavaş öğreniyor.
+
+Sonuç: Eğitim bittikten sonra model artık yeni gördüğü kedi–köpek fotolarını tanıyabiliyor.
+
+👉 Yani “train” = modeli verilerle eğitmek
