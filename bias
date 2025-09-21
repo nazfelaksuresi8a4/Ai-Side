@@ -1,0 +1,7 @@
+Bias = modelin formülüne eklenen sabit kaydırma terimi.
+Fonksiyonu yukarı/aşağı kaydırır, öğrenmeyi daha esnek yapar.
+
+👉 Denklem: 
+𝑦= 𝑤 ⋅ 𝑥 + 𝑏
+
+Buradaki b = bias.
