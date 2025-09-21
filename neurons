@@ -1,0 +1,9 @@
+Sinir ağlarında nöronlarda 3 çeşit vardır
+
+1-input layer = veriyi alan 
+2-hidden layer = input layerdan veriyi nöronların içine alan
+3-outut layer = hidden layerdaki verilerin katsayısı(çıktı)
+
+nöronlar hidden layerdaki nöronların hepsinin kat sayılarını çarpar
+ve sonuca yakın olana kadar o katsayıları değiştirir en yakın en iyi
+sonucu bulana kadar bunu tekrarlar
