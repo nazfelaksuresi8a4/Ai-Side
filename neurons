@@ -7,3 +7,10 @@ Sinir ağlarında nöronlarda 3 çeşit vardır
 nöronlar hidden layerdaki nöronların hepsinin kat sayılarını çarpar
 ve sonuca yakın olana kadar o katsayıları değiştirir en yakın en iyi
 sonucu bulana kadar bunu tekrarlar
+
+buradaki her bir denemeye epoch denir 
+öğrenme aşamaları başarılı oldukça 
+sayı tahmin edilebildikçe bu değer 
+yukarı yönde değişkenlik gösterebilir
+tabikide bu modelin genel durumuna bağlı olan bir
+veri 
