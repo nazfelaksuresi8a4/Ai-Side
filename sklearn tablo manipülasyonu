@@ -1,0 +1,65 @@
+
+#label_encoder metodu tabloları manipüle etmemizi  etiket(label)leri numerik hale getirmemeizi sağlar 
+
+#import numpy as np    \\ isteğe bağlı özelleştirme modülü
+import pandas as pd
+#from keras.models import Sequential   \\ isteğe bağlı özelleştirme modülü
+#from keras.layers import Dense   \\ isteğe bağlı özelleştirme modülü
+from sklearn.preprocessing import LabelEncoder
+#from sklearn.model_selection import train_test_split   \\ isteğe bağlı özelleştirme modülü
+
+
+df = pd.read_csv("/kaggle/input/anemia-types-classification/diagnosed_cbc_data_v4.csv")
+
+y = df['Diagnosis']
+x = df.drop(['Diagnosis'],axis=1)
+
+enc = LabelEncoder()
+y = enc.fit_transform(y)
+
+#print(y) bize tablodaki tüm verileri verir ancak etiketleri 0 1 2 3 4 5 diye numerik olarak düzenler 
+
+
+df = pd.read_csv("/kaggle/input/anemia-types-classification/diagnosed_cbc_data_v4.csv")
+
+y = df['Diagnosis']
+x = df.drop(['Diagnosis'],axis=1)
+
+enc = LabelEncoder()
+y = enc.fit_transform(y)
+
+y = enc.inverse_transform(y)
+
+#bu örnekte ise y tablosunun enkode edilmiş halini geri decode ederek string etiketleri geri getirebiliriz teknik olarak tabloyu değiştirmez ancak değişkene atandığı için değiştiriyor gibi görünüyor
+
+df = pd.read_csv("/kaggle/input/anemia-types-classification/diagnosed_cbc_data_v4.csv")
+
+y = df['Diagnosis']
+x = df.drop(['Diagnosis'],axis=1)
+
+#print(x)
+
+enc = LabelEncoder()
+y = enc.fit_transform(y)  #DataFrame'i encode ediyoruz
+
+y = enc.inverse_transform([4])   #burada ise enkode edilmiş dataframe'in belirtilen indexinde inverse_transoform uygulayarak enkode işlemini gerçekleştiriyoruz
+print(y)
+
+#NOT: indexleme yaparken tek bir yöntem yoktur
+
+#dataframedeki verileri binary 0-1 categorical veriye çevirmek:
+
+df = pd.read_csv("/kaggle/input/anemia-types-classification/diagnosed_cbc_data_v4.csv")
+
+y = df['Diagnosis']
+x = df.drop(['Diagnosis'],axis=1)
+
+#print(x)
+
+enc = LabelEncoder()
+y = enc.fit_transform(y)
+
+
+y = to_categorical(y)    #belirtilen indexdeki veye belirtilen dataframedeki bir vektöre  örn [0,1,5,5,1,4,3,4,0,0] bu vektörü şuna çeviri  [0,1,1,1,1,1,1,1,0,0]  bu sayede model daha iyi bir şekilde eğitilebilir 
+print(y[4])
+
