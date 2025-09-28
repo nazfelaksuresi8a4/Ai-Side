@@ -60,6 +60,36 @@ enc = LabelEncoder()
 y = enc.fit_transform(y)
 
 
-y = to_categorical(y)    #belirtilen indexdeki veye belirtilen dataframedeki bir vektöre  örn [0,1,5,5,1,4,3,4,0,0] bu vektörü şuna çeviri  [0,1,1,1,1,1,1,1,0,0]  bu sayede model daha iyi bir şekilde eğitilebilir 
+y = to_categorical(y)    #belirtilen matrixi/vektörü 0 ve 1 olarak matrixe çevirip döner matrixe çevirirken şunlara dikkat eder;
+
+° vektörün/matrixin satır sayısı;
+
+satır sayısı kadar satırı olan bir matrix döner
+
+
+° vektörün/matrixin sütun sayısı sütun sayısı;
+
+sütun sayısı kadar sütunu olan vektörleri matrixin içine koyar
+
+
+° vektörün/matrixin içindeki sınıf sayısı
+
+Örn:
+
+x = [3,3,3,0,2,2,2]
+
+x vektörün de sınıf sayısı 3 tür 
+
+çünkü 3 tane benzersiz(unique) değer barındırır 
+7 elemandan oluşması bir şeyi değiştirmez
+
+NOT: 7 Elemanınon olması argüman olarak sadece dönecek olan matrixin satır sayısını etkiler
+
+ÖNEMLİ: vektör içindeki en büyük sınıf + 1 = dönecek olan matrizin sütun sayısıdır
+
+NOT: Matrixin içindeki vektörler sadece 0-1 den ooluşu
+
+
+
 print(y[4])
 
