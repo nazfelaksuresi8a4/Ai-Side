@@ -1,0 +1,47 @@
+from keras.datasets import fashion_mnist
+import matplotlib.pyplot as plt
+#import numpy as np 
+
+#np random dataset oluşturmak için import edilmek üzere hazır bekletiliyor
+
+matrix_data,shape_data = fashion_mnist.load_data()
+
+matrix,shape = matrix_data
+print('unpacked')
+
+axescolormap = 'gray'
+v1 = 3
+w1 = 0
+n = len(matrix)
+m = 2
+index = 0
+pause_dim = 0.2
+fSİZE = (5,4)
+print('vars created a succesfuly.')
+
+fig,ax = plt.subplots(nrows=3,
+                      ncols=2,
+                      figsize=(5,4))
+print('canvas-figure-axis created succesfuly')
+
+for i in range(n // 2):
+    if i > 2:
+        print(f'i breaked for: {i} location: loop-i')
+        break
+    
+    else:
+        for j in range(m):
+            if i > 2:
+                print(f'i breaked for: {i} location: loop-j')
+                break
+            
+            else:
+                print(i,j)
+                ax[i,j].imshow(matrix[index],cmap=axescolormap)
+                plt.pause(pause_dim)
+                index += 1
+
+print('images is visible.')
+print(f'current axes colormap type: {axescolormap}')
+
+plt.show()
