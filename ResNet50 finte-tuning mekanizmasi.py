@@ -1,84 +1,100 @@
-import tensorflow as tf
-from keras.src.layers import GlobalAveragePooling2D, BatchNormalization
-from tensorflow.keras.applications import ResNet50
-from tensorflow.keras.applications.resnet50 import preprocess_input
+'''IMPORTS'''
+
+import tensorflow as tf 
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
-from tensorflow.keras import layers, models
+from tensorflow.keras.applications.resnet import ResNet50,preprocess_input
+from tensorflow.keras.layers import Dense,GlobalAveragePooling2D,BatchNormalization,Dropout
+from tensorflow.keras.callbacks import ReduceLROnPlateau,EarlyStopping
+from tensorflow.keras.models import Model
+from tensorflow.keras.optimizers import Adam
 
-# =====================
-# PATHS
-# =====================
-dataset_path = r"C:\Users\alper\Desktop\Plant Disease Project\datasets\DiseaseFindingDataset"
-train_path = dataset_path + r"\Train"
-validation_path = dataset_path + r"\Test"
+'''SETTINGS'''
+dataset_path = r'C:\Users\alper\Desktop\Plant Disease Project\datasets\LeafClassificationDataset'
+train_path = dataset_path + '\Train'
+validation_path = dataset_path + '\Test'
 
-IMG_SIZE = (224, 224)
-BATCH_SIZE = 16
-NUM_CLASSES = 11
+TARGET_SIZE = (224,224)
+INPUT_SHAPE = (224,224,3)
+BATCH_SIZE = 32
+CLASS_MODE = 'binary'
 
+'''GENERATORS'''
 train_data_generator = ImageDataGenerator(preprocessing_function=preprocess_input,
-                                          horizontal_flip=True,
-                                          zoom_range=0.25,
-                                          rotation_range=15,
-                                          width_shift_range=0.23,
-                                          height_shift_range=0.23)
+                                          horizontal_flip = True,
+                                          rotation_range = 15,
+                                          zoom_range = 0.25,
+                                          width_shift_range = 0.15,
+                                          height_shift_range = 0.15,
+                                          brightness_range = (0.3,0.8))
 
 validation_data_generator = ImageDataGenerator(preprocessing_function=preprocess_input)
 
+
+'''FLOWS'''
 train_flow = train_data_generator.flow_from_directory(directory=train_path,
-                                                      target_size=IMG_SIZE,
+                                                      target_size=TARGET_SIZE,
                                                       batch_size=BATCH_SIZE,
-                                                      class_mode='categorical'
-                                                      )
+                                                      class_mode=CLASS_MODE)
 
 validation_flow = validation_data_generator.flow_from_directory(directory=validation_path,
-                                                                target_size=IMG_SIZE,
+                                                                target_size=TARGET_SIZE,
                                                                 batch_size=BATCH_SIZE,
-                                                                class_mode='categorical',
+                                                                class_mode=CLASS_MODE,
                                                                 shuffle=False)
 
-base_model = ResNet50(include_top=False,
-                      input_shape=(224,224,3),
-                      weights='imagenet')
+'''CALLBACKS'''
+reduceLro = ReduceLROnPlateau(monitor='val_loss',
+                              factor=0.6,
+                              patience=2,
+                              verbose=True)
 
+earlyStop = EarlyStopping(monitor='val_loss',
+                          patience=4,
+                          verbose=True,
+                          min_delta=1e-4,
+                          restore_best_weights=True)
+
+
+'''BACKBONE'''
+base_model = ResNet50(weights='imagenet',
+                      include_top=False,
+                      input_shape=INPUT_SHAPE)
 
 base_model.trainable = False
 
-inputs = tf.keras.Input(shape=(224,224,3))
+
+'''FUNCTIONAL API'''
+inputs = tf.keras.Input(INPUT_SHAPE)
 x = base_model(inputs,training=False)
-x = tf.keras.layers.GlobalAveragePooling2D()(x)
-x = tf.keras.layers.BatchNormalization()(x)
-x = tf.keras.layers.Dense(256,activation='relu')(x)
-x = tf.keras.layers.Dropout(0.5)(x)
-outputs = tf.keras.layers.Dense(NUM_CLASSES,activation='softmax')(x)
+x = GlobalAveragePooling2D()(x)
+x = BatchNormalization()(x)
+x = Dense(256,activation='relu')(x)
+x = Dropout(0.5)(x)
+outputs = Dense(1,activation='sigmoid')(x)
 
-model = models.Model(inputs,outputs)
+model = tf.keras.models.Model(inputs,outputs)
 
-model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
 
-model.summary()
+'''HEAD'''
+model.compile(optimizer=Adam(learning_rate=1e-4),
+                   loss='binary_crossentropy',
+                   metrics=['accuracy'])
 
-reduceLro = ReduceLROnPlateau(monitor='val_loss',
-                              patience=2,
-                              factor=0.6,
-                              verbose=1)
+model.fit(x=train_flow,validation_data=validation_flow,epochs=10,callbacks=[reduceLro,earlyStop])
 
-earlyStop = EarlyStopping(monitor='val_loss',
-                          patience=8,
-                          restore_best_weights=True,
-                          verbose=1)
 
-for layer in base_model.layers[-30:]:
+'''FINE TUNING'''
+for layer in base_model.layers[-40:]:
     layer.trainable = True
 
-model.fit(
-    train_flow,
-    validation_data = validation_flow,
-    callbacks=[reduceLro,earlyStop],
-    epochs=16
-)
+model.compile(optimizer=Adam(learning_rate=5e-6),
+              loss='binary_crossentropy',
+              metrics=['accuracy'])
 
-model.save("LeafDiseaseClassificationModel.h5")
+
+'''FITTING'''
+fit_history = model.fit(x=train_flow,validation_data=validation_flow,epochs=16,callbacks=[reduceLro,earlyStop])
+
+print(fit_history.history)
+model.save('LeafClassificationMode.h5')
+
