@@ -14,9 +14,8 @@ train_path = r"Dataset\train"
 test_path = r"Dataset\test"
 
 '''ImageDataGenerators'''
-train_generator = ImageDataGenerator(rescale=1./255,
-                                     preprocessing_function=preprocess_input)
-test_generator = ImageDataGenerator(rescale=1./255)
+train_generator = ImageDataGenerator(preprocessing_function=preprocess_input)
+test_generator = ImageDataGenerator(preprocessing_function=preprocess_input)
 
 '''Image-data-generator-flows'''
 train_datagen = train_generator.flow_from_directory(directory=train_path,
@@ -25,7 +24,7 @@ train_datagen = train_generator.flow_from_directory(directory=train_path,
                                                     batch_size=16,
                                                     shuffle=True,
                                                     )
-test_datagen = train_generator.flow_from_directory(directory=test_path,
+test_datagen = test_generator.flow_from_directory(directory=test_path,
                                                     target_size=(224,224),
                                                     class_mode='categorical',
                                                     batch_size=16,
@@ -33,9 +32,10 @@ test_datagen = train_generator.flow_from_directory(directory=test_path,
                                                     )
 
 
-resnet = ResNet152(weights='imagenet',
+base_model = ResNet152(weights='imagenet',
                    input_shape=(224,224,3),
-                   include_top=False)
+                   include_top=False,
+                       )
 
 '''defining callbacks'''
 callbacks = [ReduceLROnPlateau(monitor='val_loss',
@@ -47,38 +47,18 @@ callbacks = [ReduceLROnPlateau(monitor='val_loss',
                            restore_best_weights=True)]
 
 '''freeezing layers'''
-for layer in resnet.layers[:-100]:
+for layer in base_model.layers[:-100]:
     layer.trainable = False
 
 '''defining functional model'''
-input_layer = Input(shape=(224,224,3))
 
-x = Conv2D(32,(3,3),strides=(1,1))(input_layer)
-x = Activation(activation='relu')(x)
-x = BatchNormalization()(x)
-x = MaxPooling2D((2,2),strides=(1,1))(x)
-
-x = Conv2D(16,(3,3),strides=(1,1))(x)
-x = Activation(activation='relu')(x)
-x = BatchNormalization()(x)
-x = MaxPooling2D((2,2),strides=(1,1))(x)
-
-x = Conv2D(8,(3,3),strides=(1,1))(x)
-x = Activation(activation='relu')(x)
-x = BatchNormalization()(x)
-x = MaxPooling2D((2,2),strides=(1,1))(x)
-
-x = Conv2D(4,(3,3),strides=(1,1))(x)
-x = Activation(activation='relu')(x)
-x = BatchNormalization()(x)
-x = MaxPooling2D((2,2),strides=(1,1))(x)
-
-x = Dropout(0.6)(x)
+x = base_model.output
 x = GlobalAveragePooling2D()(x)
+x = Dropout(0.5)(x)
 output_layer = Dense(38,activation='softmax')(x)
 
 '''defining model'''
-model = Model(input_layer,output_layer)
+model = Model(base_model.input,output_layer)
 
 '''compiling model'''
 model.compile(optimizer='adam',
@@ -86,15 +66,18 @@ model.compile(optimizer='adam',
               metrics=['accuracy'],
               )
 
-model_prediction = model.fit(x=train_datagen,
-                   batch_size=32,
-                   epochs=20,
-                   callbacks=callbacks,
+history = model.fit(x=train_datagen,
+                                validation_data = test_datagen,
+                               
+                               epochs=20,
+                               callbacks=callbacks,
 
                    )
 
-confusion_matrix_output_normed = cm(model_prediction,test_datagen,normalize=True)
-confusion_matrix_output_unnormed = cm(model_prediction,test_datagen,normalize=False)
+model_prediction = model.predict(x=test_datagen)
+
+confusion_matrix_output_normed = cm(test_datagen.classes,np.argmax(model_prediction,axis=1),normalize=True)
+confusion_matrix_output_unnormed = cm(test_datagen.classes,np.argmax(model_prediction,axis=1),normalize=False)
 
 print(confusion_matrix_output_normed)
 print(confusion_matrix_output_unnormed)
